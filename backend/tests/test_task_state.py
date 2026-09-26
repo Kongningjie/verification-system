@@ -21,20 +21,28 @@ def test_restart_interrupts_active_tasks_but_not_confirmation_wait() -> None:
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
     with Session(engine) as session:
-        active = VerificationTask(
-            name="Active", status=TaskStatus.PARSING, stage=TaskStatus.PARSING.value
-        )
+        active_tasks = [
+            VerificationTask(name=status.value, status=status, stage=status.value)
+            for status in (
+                TaskStatus.PARSING,
+                TaskStatus.QUEUED,
+                TaskStatus.MATCHING_EVIDENCE,
+                TaskStatus.CHECKING,
+                TaskStatus.AGGREGATING,
+            )
+        ]
         waiting = VerificationTask(
             name="Waiting",
             status=TaskStatus.AWAITING_CHECKLIST_CONFIRMATION,
             stage=TaskStatus.AWAITING_CHECKLIST_CONFIRMATION.value,
         )
-        session.add_all([active, waiting])
+        session.add_all([*active_tasks, waiting])
         session.commit()
 
-        assert interrupt_active_tasks(session) == 1
-        session.refresh(active)
+        assert interrupt_active_tasks(session) == len(active_tasks)
+        for active in active_tasks:
+            session.refresh(active)
+            assert active.status == TaskStatus.INTERRUPTED
         session.refresh(waiting)
 
-        assert active.status == TaskStatus.INTERRUPTED
         assert waiting.status == TaskStatus.AWAITING_CHECKLIST_CONFIRMATION

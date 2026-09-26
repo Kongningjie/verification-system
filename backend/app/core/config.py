@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     model_max_concurrency: int = Field(default=3, ge=1, le=20)
     model_timeout_seconds: int = Field(default=90, ge=1)
     model_max_retries: int = Field(default=2, ge=0, le=10)
+    max_evidence_candidates_per_source: int = Field(default=8, ge=1, le=50)
 
     reviewer_name: str = "本地用户"
     retention_days: int | None = Field(default=None, ge=1)

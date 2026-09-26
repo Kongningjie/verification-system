@@ -22,6 +22,31 @@ _ALLOWED_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
         TaskStatus.QUEUED,
         TaskStatus.CANCELLED,
     },
+    TaskStatus.QUEUED: {
+        TaskStatus.MATCHING_EVIDENCE,
+        TaskStatus.CANCELLED,
+        TaskStatus.INTERRUPTED,
+    },
+    TaskStatus.MATCHING_EVIDENCE: {
+        TaskStatus.CHECKING,
+        TaskStatus.CANCELLED,
+        TaskStatus.INTERRUPTED,
+        TaskStatus.FAILED,
+    },
+    TaskStatus.CHECKING: {
+        TaskStatus.AGGREGATING,
+        TaskStatus.CANCELLED,
+        TaskStatus.INTERRUPTED,
+        TaskStatus.FAILED,
+    },
+    TaskStatus.AGGREGATING: {
+        TaskStatus.COMPLETED,
+        TaskStatus.COMPLETED_WITH_ERRORS,
+        TaskStatus.CANCELLED,
+        TaskStatus.INTERRUPTED,
+        TaskStatus.FAILED,
+    },
+    TaskStatus.COMPLETED_WITH_ERRORS: {TaskStatus.QUEUED},
 }
 
 _ACTIVE_STATUSES = {

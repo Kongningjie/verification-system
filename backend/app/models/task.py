@@ -66,7 +66,11 @@ class VerificationTask(Base):
     checklist_versions: Mapped[list["ChecklistVersion"]] = relationship(
         back_populates="task", cascade="all, delete-orphan"
     )
+    results: Mapped[list["CheckResult"]] = relationship(
+        back_populates="task", cascade="all, delete-orphan"
+    )
 
 
 from app.models.checklist import CheckItem, ChecklistVersion  # noqa: E402
 from app.models.document import ParseWarning, ProjectMetadata, TaskFile  # noqa: E402
+from app.models.execution import CheckResult  # noqa: E402

@@ -3,7 +3,12 @@ from pathlib import Path
 
 import pytest
 from app.agents.checklist import FakeChecklistGenerator
-from app.api.routes.tasks import checklist_generator_dependency
+from app.agents.execution import FakeEvidenceJudge
+from app.api.routes.tasks import (
+    checklist_generator_dependency,
+    evidence_judge_dependency,
+    execution_session_factory_dependency,
+)
 from app.core.config import Settings, get_settings
 from app.db.base import Base
 from app.db.session import get_db
@@ -44,10 +49,14 @@ def api_client(
     app.dependency_overrides[get_settings] = lambda: settings
     fake_generator = FakeChecklistGenerator()
     app.dependency_overrides[checklist_generator_dependency] = lambda: fake_generator
+    fake_judge = FakeEvidenceJudge()
+    app.dependency_overrides[evidence_judge_dependency] = lambda: fake_judge
+    app.dependency_overrides[execution_session_factory_dependency] = lambda: testing_session
     monkeypatch.setattr("app.main.initialize_runtime", lambda: None)
     with TestClient(app) as client:
         client.test_settings = settings  # type: ignore[attr-defined]
         client.fake_checklist_generator = fake_generator  # type: ignore[attr-defined]
+        client.fake_evidence_judge = fake_judge  # type: ignore[attr-defined]
         yield client
     app.dependency_overrides.clear()
     engine.dispose()

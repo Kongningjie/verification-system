@@ -10,14 +10,18 @@ from app.models.document import (
     TaskFile,
     TemplateComment,
 )
+from app.models.execution import CheckResult, CheckRun, Evidence
 from app.models.task import TaskStatus, VerificationTask
 
 __all__ = [
     "BlockType",
     "CheckItem",
     "ChecklistVersion",
+    "CheckResult",
+    "CheckRun",
     "DocumentAsset",
     "DocumentBlock",
+    "Evidence",
     "FileCategory",
     "ParseStatus",
     "ParseWarning",

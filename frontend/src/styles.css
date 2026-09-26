@@ -65,6 +65,11 @@ h1 { margin: 0; font-size: clamp(30px, 5vw, 48px); line-height: 1.2; }
   background: rgb(23 59 99 / 96%);
   box-shadow: 0 -4px 20px rgb(20 48 79 / 18%);
 }
+.result-actions { display: flex; gap: 10px; }
+.result-reason { color: #344258; line-height: 1.7; white-space: pre-wrap; }
+.evidence-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; color: #455268; }
+.evidence-row + .evidence-row { border-top: 1px solid #edf0f4; }
+.open-results { margin-top: 16px; }
 
 @media (max-width: 700px) {
   .app-header { padding: 0 18px; }

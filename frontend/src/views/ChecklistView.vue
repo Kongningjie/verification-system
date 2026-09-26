@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { computed, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 import {
@@ -16,6 +16,7 @@ import {
 } from '../api/checklists'
 
 const route = useRoute()
+const router = useRouter()
 const taskId = computed(() => String(route.params.taskId))
 const checklist = ref<ChecklistResponse | null>(null)
 const loading = ref(true)
@@ -118,7 +119,7 @@ async function confirmAll(): Promise<void> {
     }
     const version = await confirmChecklist(taskId.value, checklist.value.checklist_revision)
     ElMessage.success(`清单版本 v${version.version_number} 已冻结`)
-    await load()
+    await router.push({ name: 'results', params: { taskId: taskId.value } })
   } catch (reason) {
     ElMessage.error(errorMessage(reason))
     await load()
@@ -161,6 +162,14 @@ onMounted(load)
         show-icon
         :title="`清单已确认，当前任务状态：${checklist.task_status}`"
       />
+      <el-button
+        v-if="!editable"
+        type="primary"
+        class="open-results"
+        @click="router.push({ name: 'results', params: { taskId } })"
+      >
+        查看核对结果
+      </el-button>
       <div class="checklist-items">
         <el-card
           v-for="(item, index) in checklist.items"

@@ -27,10 +27,10 @@ onMounted(async () => {
 <template>
   <section class="home">
     <el-card class="hero" shadow="never">
-      <p class="eyebrow">阶段 2 · 核对清单</p>
-      <h1>动态核对清单已可生成与确认</h1>
+      <p class="eyebrow">阶段 3 · 证据核对</p>
+      <h1>从动态清单到可追溯结论</h1>
       <p class="subtitle">
-        上传材料经解析后，系统会合并通用规则与模板批注要求。你可以逐项编辑、停用、调整等级，再冻结为不可变版本。
+        确认清单后，系统会匹配材料内证据，依次执行确定性规则与受白名单约束的文本或视觉判断，并保留独立复核运行记录。
       </p>
 
       <el-alert v-if="health" type="success" :closable="false" show-icon>
@@ -47,7 +47,7 @@ onMounted(async () => {
         </div>
         <div class="milestone pending">
           <el-icon><Warning /></el-icon>
-          <div><strong>后续阶段</strong><span>证据匹配、正式核对、复核与报告</span></div>
+          <div><strong>后续阶段</strong><span>人工复核、Excel/JSON 报告与验收评估</span></div>
         </div>
       </div>
 

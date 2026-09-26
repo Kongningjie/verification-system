@@ -82,7 +82,7 @@ def test_edit_uses_optimistic_lock_and_confirmation_is_immutable(
     snapshot = confirmed.json()
     assert snapshot["version_number"] == 1
     assert any(entry["name"] == "认证资料一致性" for entry in snapshot["snapshot"])
-    assert api_client.get(f"/api/v1/tasks/{task['id']}").json()["status"] == "QUEUED"
+    assert api_client.get(f"/api/v1/tasks/{task['id']}").json()["status"] == "COMPLETED"
 
     after_confirm = api_client.patch(
         f"/api/v1/tasks/{task['id']}/check-items/{item['id']}",
