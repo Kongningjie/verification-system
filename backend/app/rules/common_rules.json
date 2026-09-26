@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "ruleset_version": "2026.09.1",
+  "rules": [
+    {
+      "rule_id": "common.product_name",
+      "version": "1.0",
+      "name": "产品名称一致性",
+      "description": "说明书中的产品名称必须与项目资料一致。",
+      "check_type": "FIELD",
+      "default_severity": "CRITICAL",
+      "required_sources": ["MANUAL", "PROJECT"],
+      "applicability": "project.product_name_present",
+      "executor": "FIELD_RULE"
+    },
+    {
+      "rule_id": "common.model",
+      "version": "1.0",
+      "name": "型号一致性",
+      "description": "说明书中的型号必须与项目资料一致。",
+      "check_type": "FIELD",
+      "default_severity": "CRITICAL",
+      "required_sources": ["MANUAL", "PROJECT"],
+      "applicability": "project.model_present",
+      "executor": "FIELD_RULE"
+    },
+    {
+      "rule_id": "common.brand",
+      "version": "1.0",
+      "name": "品牌一致性",
+      "description": "说明书中的品牌必须与项目资料一致。",
+      "check_type": "FIELD",
+      "default_severity": "NORMAL",
+      "required_sources": ["MANUAL", "PROJECT"],
+      "applicability": "project.brand_present",
+      "executor": "FIELD_RULE"
+    },
+    {
+      "rule_id": "common.market",
+      "version": "1.0",
+      "name": "目标市场一致性",
+      "description": "说明书中的市场信息和适用内容必须与目标市场一致。",
+      "check_type": "SEMANTIC",
+      "default_severity": "CRITICAL",
+      "required_sources": ["MANUAL", "PROJECT"],
+      "applicability": "project.market_present",
+      "executor": "SEMANTIC_AGENT"
+    },
+    {
+      "rule_id": "common.language",
+      "version": "1.0",
+      "name": "语言覆盖",
+      "description": "说明书必须覆盖项目资料声明的目标语言。",
+      "check_type": "STRUCTURE",
+      "default_severity": "NORMAL",
+      "required_sources": ["MANUAL", "PROJECT"],
+      "applicability": "project.language_present",
+      "executor": "STRUCTURE_RULE"
+    },
+    {
+      "rule_id": "common.required_sections",
+      "version": "1.0",
+      "name": "必要章节完整性",
+      "description": "说明书必须包含适用于本产品的安全、使用和合规必要章节。",
+      "check_type": "STRUCTURE",
+      "default_severity": "CRITICAL",
+      "required_sources": ["MANUAL"],
+      "applicability": "always",
+      "executor": "STRUCTURE_RULE"
+    },
+    {
+      "rule_id": "common.project_attributes",
+      "version": "1.0",
+      "name": "项目扩展属性一致性",
+      "description": "说明书中可核对的项目扩展属性必须与项目资料一致。",
+      "check_type": "FIELD",
+      "default_severity": "NORMAL",
+      "required_sources": ["MANUAL", "PROJECT"],
+      "applicability": "attributes.non_empty",
+      "executor": "FIELD_RULE"
+    }
+  ]
+}

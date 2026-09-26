@@ -33,10 +33,45 @@ h1 { margin: 0; font-size: clamp(30px, 5vw, 48px); line-height: 1.2; }
 .milestone span { margin-top: 5px; color: #6b7484; font-size: 14px; }
 .milestone.done .el-icon { color: #2b8a66; }
 .milestone.pending .el-icon { color: #b7791f; }
+.task-entry { display: flex; gap: 12px; margin-top: 28px; }
+
+.checklist-page { max-width: 1180px; margin: 36px auto 120px; }
+.page-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.page-heading h1 { font-size: 38px; }
+.checklist-items { display: grid; gap: 18px; margin-top: 24px; }
+.check-item { border: 1px solid #dfe6ef; border-radius: 14px; }
+.check-item.disabled { opacity: .68; }
+.item-header, .item-identity { display: flex; align-items: center; gap: 10px; }
+.item-header { justify-content: space-between; }
+.item-identity { flex-wrap: wrap; }
+.source-panel { height: 100%; padding: 16px; border-radius: 10px; background: #f6f8fb; }
+.source-panel h3 { margin: 0 0 14px; }
+.source-panel p { margin: 10px 0; color: #455268; line-height: 1.65; white-space: pre-wrap; }
+.source-panel p span { color: #172033; font-weight: 700; }
+.warnings { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.check-item .el-select { width: 100%; }
+.confirm-bar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 16px 24px;
+  color: #fff;
+  background: rgb(23 59 99 / 96%);
+  box-shadow: 0 -4px 20px rgb(20 48 79 / 18%);
+}
 
 @media (max-width: 700px) {
   .app-header { padding: 0 18px; }
   .home { margin: 20px auto; }
   .hero :deep(.el-card__body) { padding: 28px 22px; }
   .milestones { grid-template-columns: 1fr; }
+  .task-entry, .page-heading, .confirm-bar { align-items: stretch; flex-direction: column; }
+  .checklist-page { margin: 20px 12px 150px; }
+  .item-header { align-items: flex-start; }
 }

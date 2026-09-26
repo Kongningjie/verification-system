@@ -6,6 +6,7 @@ from fastapi import UploadFile
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app.agents.checklist import ChecklistGenerator
 from app.core.config import Settings
 from app.core.errors import AppError, ValidationError
 from app.models.document import FileCategory, ParseStatus, ParseWarning, TaskFile
@@ -16,6 +17,7 @@ from app.parsers.pdf import parse_pdf
 from app.parsers.project_json import parse_project_json
 from app.repositories.tasks import add_graph, get_task_detail, set_project_metadata
 from app.schemas.task import TaskDetailResponse
+from app.services.checklists import generate_checklist
 from app.services.storage import (
     category_for_evidence,
     create_task_directories,
@@ -35,6 +37,7 @@ async def create_task(
     template: UploadFile,
     project: UploadFile,
     evidence_files: list[UploadFile],
+    checklist_generator: ChecklistGenerator,
 ) -> TaskDetailResponse:
     clean_name = name.strip()
     if not clean_name or len(clean_name) > 255:
@@ -47,6 +50,7 @@ async def create_task(
     session.commit()
     session.refresh(task)
     directories: dict[str, Path] | None = None
+    materials_ready = False
 
     try:
         transition_task(task, TaskStatus.VALIDATING, progress=5)
@@ -157,6 +161,8 @@ async def create_task(
         )
         transition_task(task, TaskStatus.GENERATING_CHECKLIST, progress=60)
         session.commit()
+        materials_ready = True
+        await generate_checklist(session, task, checklist_generator)
         return get_task_detail(session, task.id)
     except Exception as exc:
         session.rollback()
@@ -167,7 +173,7 @@ async def create_task(
         task_root = directories["root"]
         verified_root = safe_path(settings.tasks_root, task.id)
         cleanup_failed = False
-        if task_root == verified_root and task_root.exists():
+        if not materials_ready and task_root == verified_root and task_root.exists():
             try:
                 shutil.rmtree(task_root)
             except OSError:
@@ -175,7 +181,7 @@ async def create_task(
 
         persisted_task = session.get(VerificationTask, task.id)
         if persisted_task is not None:
-            if not cleanup_failed:
+            if not cleanup_failed and not materials_ready:
                 for task_file in list(persisted_task.files):
                     session.delete(task_file)
             fail_task(

@@ -110,6 +110,8 @@ def get_task_model(session: Session, task_id: str) -> VerificationTask:
             selectinload(VerificationTask.files).selectinload(TaskFile.assets),
             selectinload(VerificationTask.warnings),
             selectinload(VerificationTask.project_metadata),
+            selectinload(VerificationTask.check_items),
+            selectinload(VerificationTask.checklist_versions),
         )
     )
     task = session.scalar(statement)

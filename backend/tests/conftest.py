@@ -2,6 +2,8 @@ from collections.abc import Generator
 from pathlib import Path
 
 import pytest
+from app.agents.checklist import FakeChecklistGenerator
+from app.api.routes.tasks import checklist_generator_dependency
 from app.core.config import Settings, get_settings
 from app.db.base import Base
 from app.db.session import get_db
@@ -40,9 +42,12 @@ def api_client(
 
     app.dependency_overrides[get_db] = override_db
     app.dependency_overrides[get_settings] = lambda: settings
+    fake_generator = FakeChecklistGenerator()
+    app.dependency_overrides[checklist_generator_dependency] = lambda: fake_generator
     monkeypatch.setattr("app.main.initialize_runtime", lambda: None)
     with TestClient(app) as client:
         client.test_settings = settings  # type: ignore[attr-defined]
+        client.fake_checklist_generator = fake_generator  # type: ignore[attr-defined]
         yield client
     app.dependency_overrides.clear()
     engine.dispose()

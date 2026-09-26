@@ -38,6 +38,8 @@ class VerificationTask(Base):
     progress: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     schema_version: Mapped[str] = mapped_column(String(16), default="1.0", nullable=False)
     warning_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    checklist_revision: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    confirmed_checklist_version: Mapped[int | None] = mapped_column(Integer, nullable=True)
     error_code: Mapped[str | None] = mapped_column(String(64), nullable=True)
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
@@ -58,6 +60,13 @@ class VerificationTask(Base):
     project_metadata: Mapped["ProjectMetadata | None"] = relationship(
         back_populates="task", cascade="all, delete-orphan", uselist=False
     )
+    check_items: Mapped[list["CheckItem"]] = relationship(
+        back_populates="task", cascade="all, delete-orphan"
+    )
+    checklist_versions: Mapped[list["ChecklistVersion"]] = relationship(
+        back_populates="task", cascade="all, delete-orphan"
+    )
 
 
+from app.models.checklist import CheckItem, ChecklistVersion  # noqa: E402
 from app.models.document import ParseWarning, ProjectMetadata, TaskFile  # noqa: E402

@@ -38,6 +38,8 @@ class TaskSummaryResponse(BaseModel):
     stage: str
     progress: int
     warning_count: int
+    checklist_revision: int
+    confirmed_checklist_version: int | None
     error_code: str | None
     error_message: str | None
     created_at: datetime

@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { CircleCheck, Warning } from '@element-plus/icons-vue'
 
 import { getHealth, type HealthResponse } from '../api/health'
 
 const health = ref<HealthResponse | null>(null)
 const error = ref('')
+const taskId = ref('')
+const router = useRouter()
+
+function openChecklist(): void {
+  const value = taskId.value.trim()
+  if (value) void router.push({ name: 'checklist', params: { taskId: value } })
+}
 
 onMounted(async () => {
   try {
@@ -19,10 +27,10 @@ onMounted(async () => {
 <template>
   <section class="home">
     <el-card class="hero" shadow="never">
-      <p class="eyebrow">阶段 A · 工程骨架</p>
-      <h1>核对流程的本地运行底座已就绪</h1>
+      <p class="eyebrow">阶段 2 · 核对清单</p>
+      <h1>动态核对清单已可生成与确认</h1>
       <p class="subtitle">
-        当前包含前后端启动链路、SQLite 迁移、环境配置和健康检查。文件解析、核对清单和模型运行将在后续阶段实现。
+        上传材料经解析后，系统会合并通用规则与模板批注要求。你可以逐项编辑、停用、调整等级，再冻结为不可变版本。
       </p>
 
       <el-alert v-if="health" type="success" :closable="false" show-icon>
@@ -39,8 +47,20 @@ onMounted(async () => {
         </div>
         <div class="milestone pending">
           <el-icon><Warning /></el-icon>
-          <div><strong>业务能力待实现</strong><span>解析、清单、证据、核对、报告</span></div>
+          <div><strong>后续阶段</strong><span>证据匹配、正式核对、复核与报告</span></div>
         </div>
+      </div>
+
+      <div class="task-entry">
+        <el-input
+          v-model="taskId"
+          placeholder="输入任务 ID，打开核对清单"
+          clearable
+          @keyup.enter="openChecklist"
+        />
+        <el-button type="primary" :disabled="!taskId.trim()" @click="openChecklist">
+          打开清单
+        </el-button>
       </div>
     </el-card>
   </section>

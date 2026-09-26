@@ -18,6 +18,10 @@ _ALLOWED_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
         TaskStatus.CANCELLED,
         TaskStatus.INTERRUPTED,
     },
+    TaskStatus.AWAITING_CHECKLIST_CONFIRMATION: {
+        TaskStatus.QUEUED,
+        TaskStatus.CANCELLED,
+    },
 }
 
 _ACTIVE_STATUSES = {

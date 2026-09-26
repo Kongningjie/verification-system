@@ -42,8 +42,8 @@ def test_complete_upload_persists_and_restores_document_graph(
 
     assert response.status_code == 201, response.text
     created = response.json()
-    assert created["status"] == "GENERATING_CHECKLIST"
-    assert created["progress"] == 60
+    assert created["status"] == "AWAITING_CHECKLIST_CONFIRMATION"
+    assert created["progress"] == 65
     assert len(created["files"]) == 5
     assert len(created["documents"]) == 4
     assert created["project"]["project"]["product_name"] == "Phone X"

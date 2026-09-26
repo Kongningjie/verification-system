@@ -23,9 +23,18 @@ def test_alembic_upgrade_and_downgrade_from_empty_database(tmp_path: Path) -> No
         "document_asset",
         "parse_warning",
         "project_metadata",
+        "check_item",
+        "checklist_version",
     } <= tables
     task_columns = {column["name"] for column in inspect(engine).get_columns("verification_task")}
-    assert {"schema_version", "warning_count", "error_code", "error_message"} <= task_columns
+    assert {
+        "schema_version",
+        "warning_count",
+        "error_code",
+        "error_message",
+        "checklist_revision",
+        "confirmed_checklist_version",
+    } <= task_columns
     engine.dispose()
 
     command.downgrade(config, "base")

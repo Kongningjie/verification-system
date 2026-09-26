@@ -1,3 +1,4 @@
+from app.models.checklist import CheckItem, ChecklistVersion
 from app.models.document import (
     BlockType,
     DocumentAsset,
@@ -13,6 +14,8 @@ from app.models.task import TaskStatus, VerificationTask
 
 __all__ = [
     "BlockType",
+    "CheckItem",
+    "ChecklistVersion",
     "DocumentAsset",
     "DocumentBlock",
     "FileCategory",
