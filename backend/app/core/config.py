@@ -21,6 +21,17 @@ class Settings(BaseSettings):
     data_root: Path = Path("./data")
     frontend_origin: str = "http://localhost:5173"
 
+    max_file_size_bytes: int = Field(default=50 * 1024 * 1024, ge=1)
+    max_task_size_bytes: int = Field(default=200 * 1024 * 1024, ge=1)
+    max_docx_entries: int = Field(default=2_000, ge=1)
+    max_docx_uncompressed_bytes: int = Field(default=200 * 1024 * 1024, ge=1)
+    max_docx_compression_ratio: int = Field(default=200, ge=1)
+    max_xml_nodes: int = Field(default=500_000, ge=1)
+    max_image_pixels: int = Field(default=40_000_000, ge=1)
+    max_model_image_edge: int = Field(default=2_048, ge=256)
+    scanned_pdf_text_threshold: int = Field(default=30, ge=0)
+    max_upload_files: int = Field(default=50, ge=3)
+
     openai_api_key: str | None = Field(default=None, repr=False)
     openai_base_url: str = "https://api.openai.com/v1"
     openai_model: str | None = None

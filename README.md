@@ -1,6 +1,6 @@
 # 说明书核对系统
 
-基于冻结方案的一期本地验证型 MVP。当前仅完成阶段 A 工程骨架：FastAPI、Vue 3、SQLite、Alembic、配置加载、健康检查和基础测试。
+基于冻结方案的一期本地验证型 MVP。当前完成阶段 1：任务材料接入、安全校验、DOCX/PDF/图片解析、项目 JSON 标准化，以及统一 `DocumentGraph` 持久化。
 
 ## 环境要求
 
@@ -39,8 +39,25 @@ npm run type-check
 npm run build
 ```
 
+## 阶段 1 API
+
+- `POST /api/v1/tasks`：multipart 创建并解析任务。
+- `GET /api/v1/tasks`：查询任务列表。
+- `GET /api/v1/tasks/{task_id}`：查询任务、材料、告警和 `DocumentGraph`。
+
+创建任务使用以下 multipart 字段：
+
+- `name`：任务名称。
+- `manual`：待核对说明书 DOCX。
+- `template`：含批注要求的模板 DOCX。
+- `project`：符合 `schema_version=1.0` 的项目 JSON。
+- `evidence_files`：可重复提交的 PDF、PNG、JPG 或 JPEG 依据材料。
+
+解析成功后任务停在 `GENERATING_CHECKLIST`，等待阶段 2 实现清单生成。
+
 ## 当前边界
 
-- 未实现文件上传、DOCX/PDF 解析、核对清单、模型调用和报告。
-- OpenAI Agents SDK 已声明为后端依赖，但阶段 A 不读取或验证真实 API Key。
+- 尚未实现核对清单、证据匹配、模型调用、结论判断、人工复核和报告。
+- OpenAI Agents SDK 已声明为后端依赖，但阶段 1 不读取或验证真实 API Key。
+- 扫描型 PDF 不执行 OCR；作为可选依据时产生告警并忽略。
 - `.env` 和 `data/` 不会提交到 Git。
