@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+if command -v pwsh >/dev/null 2>&1; then
+    powershell_command=pwsh
+else
+    powershell_command=powershell.exe
+fi
+
+"$powershell_command" -NoProfile -ExecutionPolicy Bypass -File scripts/normalize-text.ps1 -Check
+git diff --cached --check

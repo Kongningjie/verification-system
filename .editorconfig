@@ -1,0 +1,20 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{py,ps1}]
+indent_style = space
+indent_size = 4
+
+[*.{json,ts,tsx,vue,css,html,yml,yaml,md,toml}]
+indent_style = space
+indent_size = 2
+
+# 冻结方案禁止编辑；以下设置只用于避免编辑器自动清理现有内容。
+[docs/implementation0plan/00_说明书核对系统_冻结方案.md]
+trim_trailing_whitespace = false
+insert_final_newline = false
