@@ -25,6 +25,11 @@ def test_alembic_upgrade_and_downgrade_from_empty_database(tmp_path: Path) -> No
         "project_metadata",
         "check_item",
         "checklist_version",
+        "evidence",
+        "check_run",
+        "check_result",
+        "review_record",
+        "report",
     } <= tables
     task_columns = {column["name"] for column in inspect(engine).get_columns("verification_task")}
     assert {

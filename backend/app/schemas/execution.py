@@ -1,4 +1,5 @@
-from datetime import datetime
+import uuid
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any, Literal
 
@@ -125,6 +126,7 @@ class EvidenceResponse(BaseModel):
     role: EvidenceRole
     source_category: SourceCategory
     excerpt: str
+    content_type: str
     locator: dict[str, Any]
     score: float
 
@@ -152,6 +154,17 @@ class CheckRunResponse(BaseModel):
     created_at: datetime
 
 
+class ReviewRecordSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    reviewer_name: str
+    previous_conclusion: ResultConclusion
+    new_conclusion: ResultConclusion
+    comment: str
+    created_at: datetime
+
+
 class CheckResultResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -160,6 +173,7 @@ class CheckResultResponse(BaseModel):
     task_id: str
     check_item_id: str
     check_name: str
+    requirement: str = ""
     check_type: str
     severity: Severity
     system_conclusion: ResultConclusion
@@ -170,6 +184,7 @@ class CheckResultResponse(BaseModel):
     has_manual_override: bool
     evidences: list[EvidenceResponse] = Field(default_factory=list)
     runs: list[CheckRunResponse] = Field(default_factory=list)
+    review_records: list[ReviewRecordSummary] = Field(default_factory=list)
     created_at: datetime
     updated_at: datetime
 
@@ -180,6 +195,9 @@ class ResultListResponse(BaseModel):
     schema_version: Literal["1.0"] = "1.0"
     task_id: str
     task_status: str
+    total: int
+    page: int
+    page_size: int
     items: list[CheckResultResponse]
 
 
@@ -187,16 +205,21 @@ class ProgressEvent(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     schema_version: Literal["1.0"] = "1.0"
+    event_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     task_id: str
+    type: str
     status: str
+    stage: str
     progress: int = Field(ge=0, le=100)
     message: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class ResultFilter(BaseModel):
     conclusion: ResultConclusion | None = None
     executor_type: ExecutorType | None = None
     severity: Severity | None = None
+    has_manual_override: bool | None = None
 
 
 class PersistedJudgement(BaseModel):

@@ -21,6 +21,10 @@ body { margin: 0; min-width: 320px; min-height: 100vh; }
 }
 .brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; }
 .home { max-width: 980px; margin: 48px auto; }
+.task-center { max-width: 1280px; margin: 36px auto 80px; }
+.upload-card, .task-table, .filter-card { margin-top: 24px; }
+.upload-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
+.upload-grid label { display: grid; gap: 8px; padding: 14px; border: 1px solid #dfe6ef; border-radius: 10px; color: #344258; }
 .hero { border: 0; border-radius: 18px; }
 .hero :deep(.el-card__body) { padding: 48px; }
 .eyebrow { margin: 0 0 12px; color: #2f6fad; font-weight: 700; letter-spacing: .08em; }
@@ -66,16 +70,23 @@ h1 { margin: 0; font-size: clamp(30px, 5vw, 48px); line-height: 1.2; }
   box-shadow: 0 -4px 20px rgb(20 48 79 / 18%);
 }
 .result-actions { display: flex; gap: 10px; }
+.filter-card :deep(.el-card__body) { display: flex; flex-wrap: wrap; gap: 12px; }
+.filter-card .el-select { width: 180px; }
 .result-reason { color: #344258; line-height: 1.7; white-space: pre-wrap; }
 .evidence-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; color: #455268; }
 .evidence-row + .evidence-row { border-top: 1px solid #edf0f4; }
 .open-results { margin-top: 16px; }
+.evidence-detail { margin-bottom: 14px; padding: 14px; border: 1px solid #dfe6ef; border-radius: 10px; }
+.evidence-detail p, .evidence-detail pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.evidence-detail pre { padding: 10px; background: #f6f8fb; }
+.evidence-detail img { width: min(100%, 420px); max-height: 300px; object-fit: contain; }
 
 @media (max-width: 700px) {
   .app-header { padding: 0 18px; }
   .home { margin: 20px auto; }
   .hero :deep(.el-card__body) { padding: 28px 22px; }
   .milestones { grid-template-columns: 1fr; }
+  .upload-grid { grid-template-columns: 1fr; }
   .task-entry, .page-heading, .confirm-bar { align-items: stretch; flex-direction: column; }
   .checklist-page { margin: 20px 12px 150px; }
   .item-header { align-items: flex-start; }

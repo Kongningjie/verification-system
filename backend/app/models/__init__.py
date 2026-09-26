@@ -11,6 +11,8 @@ from app.models.document import (
     TemplateComment,
 )
 from app.models.execution import CheckResult, CheckRun, Evidence
+from app.models.report import Report
+from app.models.review import ReviewRecord
 from app.models.task import TaskStatus, VerificationTask
 
 __all__ = [
@@ -26,6 +28,8 @@ __all__ = [
     "ParseStatus",
     "ParseWarning",
     "ProjectMetadata",
+    "Report",
+    "ReviewRecord",
     "TaskFile",
     "TaskStatus",
     "TemplateComment",

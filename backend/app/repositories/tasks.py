@@ -10,8 +10,10 @@ from app.models.document import (
     TaskFile,
     TemplateComment,
 )
+from app.models.execution import CheckResult
 from app.models.task import VerificationTask
 from app.schemas.document import DocumentGraph
+from app.schemas.execution import ResultConclusion
 from app.schemas.task import (
     TaskDetailResponse,
     TaskFileResponse,
@@ -97,7 +99,42 @@ def list_tasks(session: Session) -> list[TaskSummaryResponse]:
     tasks = session.scalars(
         select(VerificationTask).order_by(VerificationTask.created_at.desc())
     ).all()
-    return [TaskSummaryResponse.model_validate(task) for task in tasks]
+    counts = session.execute(
+        select(
+            CheckResult.task_id,
+            CheckResult.final_conclusion,
+            CheckResult.has_manual_override,
+        )
+    ).all()
+    by_task: dict[str, list[tuple[ResultConclusion, bool]]] = {}
+    for task_id, conclusion, overridden in counts:
+        by_task.setdefault(task_id, []).append((conclusion, overridden))
+    responses: list[TaskSummaryResponse] = []
+    for task in tasks:
+        values = by_task.get(task.id, [])
+        responses.append(
+            TaskSummaryResponse(
+                **TaskSummaryResponse.model_validate(task).model_dump(
+                    exclude={
+                        "result_total",
+                        "pass_count",
+                        "fail_count",
+                        "needs_review_count",
+                        "error_count",
+                        "manual_override_count",
+                    }
+                ),
+                result_total=len(values),
+                pass_count=sum(value == ResultConclusion.PASS for value, _ in values),
+                fail_count=sum(value == ResultConclusion.FAIL for value, _ in values),
+                needs_review_count=sum(
+                    value == ResultConclusion.NEEDS_REVIEW for value, _ in values
+                ),
+                error_count=sum(value == ResultConclusion.ERROR for value, _ in values),
+                manual_override_count=sum(overridden for _, overridden in values),
+            )
+        )
+    return responses
 
 
 def get_task_model(session: Session, task_id: str) -> VerificationTask:

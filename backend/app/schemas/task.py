@@ -44,6 +44,12 @@ class TaskSummaryResponse(BaseModel):
     error_message: str | None
     created_at: datetime
     updated_at: datetime
+    result_total: int = 0
+    pass_count: int = 0
+    fail_count: int = 0
+    needs_review_count: int = 0
+    error_count: int = 0
+    manual_override_count: int = 0
 
 
 class TaskDetailResponse(TaskSummaryResponse):

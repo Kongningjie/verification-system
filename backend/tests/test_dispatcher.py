@@ -2,6 +2,7 @@ import asyncio
 
 import pytest
 from app.agents.execution import FakeEvidenceJudge
+from app.schemas.execution import ProgressEvent
 from app.services.execution import LocalTaskDispatcher
 
 
@@ -53,3 +54,17 @@ async def test_dispatcher_exposes_cancel_signal(monkeypatch: pytest.MonkeyPatch)
     dispatcher.cancel("cancel-me")
     await running
     assert observed.is_set()
+
+
+def test_progress_event_contains_recovery_contract() -> None:
+    event = ProgressEvent(
+        task_id="task",
+        type="task.progress_changed",
+        status="CHECKING",
+        stage="CHECKING",
+        progress=80,
+        message="checking",
+    )
+    assert event.event_id
+    assert event.type == "task.progress_changed"
+    assert event.created_at.tzinfo is not None

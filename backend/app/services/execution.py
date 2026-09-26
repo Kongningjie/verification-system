@@ -110,10 +110,18 @@ async def dispatch_with_new_session(
 
 
 async def _publish(task: VerificationTask, message: str) -> None:
+    event_type = {
+        TaskStatus.COMPLETED: "task.completed",
+        TaskStatus.COMPLETED_WITH_ERRORS: "task.completed_with_errors",
+        TaskStatus.FAILED: "task.failed",
+        TaskStatus.CANCELLED: "task.cancelled",
+    }.get(task.status, "task.stage_changed")
     await event_bus.publish(
         ProgressEvent(
             task_id=task.id,
+            type=event_type,
             status=task.status.value,
+            stage=task.stage,
             progress=task.progress,
             message=message,
         )

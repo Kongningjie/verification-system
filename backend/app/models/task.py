@@ -69,8 +69,16 @@ class VerificationTask(Base):
     results: Mapped[list["CheckResult"]] = relationship(
         back_populates="task", cascade="all, delete-orphan"
     )
+    review_records: Mapped[list["ReviewRecord"]] = relationship(
+        back_populates="task", cascade="all, delete-orphan"
+    )
+    reports: Mapped[list["Report"]] = relationship(
+        back_populates="task", cascade="all, delete-orphan"
+    )
 
 
 from app.models.checklist import CheckItem, ChecklistVersion  # noqa: E402
 from app.models.document import ParseWarning, ProjectMetadata, TaskFile  # noqa: E402
 from app.models.execution import CheckResult  # noqa: E402
+from app.models.report import Report  # noqa: E402
+from app.models.review import ReviewRecord  # noqa: E402
